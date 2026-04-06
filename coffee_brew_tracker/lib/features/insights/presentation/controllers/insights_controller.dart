@@ -1,8 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:coffee_brew_tracker/core/database/database_provider.dart';
 import 'package:coffee_brew_tracker/features/brew_log/domain/entities/brew_entity.dart';
-import 'package:coffee_brew_tracker/features/brew_log/data/repositories/brew_repository_impl.dart';
-import 'package:coffee_brew_tracker/features/brew_log/data/datasources/brew_local_datasource.dart';
+
 import 'package:coffee_brew_tracker/core/database/app_database.dart';
 
 class InsightsState {
@@ -134,10 +133,9 @@ const _sentinel = Object();
 // ── Controller ───────────────────────────────────────────────────────────────
 
 class InsightsController extends StateNotifier<InsightsState> {
-  final BrewRepositoryImpl _repository;
   final AppDatabase _db;
 
-  InsightsController(this._repository, this._db) : super(InsightsState()) {
+  InsightsController(this._db) : super(InsightsState()) {
     loadInsights();
   }
 
@@ -256,6 +254,5 @@ class InsightsController extends StateNotifier<InsightsState> {
 final insightsControllerProvider =
     StateNotifierProvider<InsightsController, InsightsState>((ref) {
   final db = ref.watch(databaseProvider);
-  final repo = BrewRepositoryImpl(BrewLocalDataSource(db));
-  return InsightsController(repo, db);
+  return InsightsController(db);
 });
